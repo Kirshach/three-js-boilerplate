@@ -1,0 +1,14 @@
+html {
+  overflow: hidden; /* prevent scroll (when camera is disabled) */
+}
+
+body {
+  margin: 0;
+}
+
+#my-scene {
+  position: fixed;
+  top: 0;
+  left: 0;
+  outline: none; /* canvas may have outline when focused */
+}
