@@ -1,13 +1,13 @@
 import * as THREE from 'three';
-import CameraControls from 'camera-controls';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 export type Store = {
   camera: THREE.PerspectiveCamera,
-  cameraControls: CameraControls,
   canvas: {
     element: HTMLCanvasElement | null,
     sizes: { width: number, height: number }
   };
+  orbitControls: OrbitControls,
   renderer: THREE.WebGLRenderer,
   scene: THREE.Scene,
   handleWindowResize(): void,
