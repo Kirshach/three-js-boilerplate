@@ -1,25 +1,20 @@
 import * as THREE from "three";
-import CameraControls from "camera-controls";
-import GUI from 'lil-gui';
-import gsap from 'gsap';
+
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 
-const canvas = document.getElementById("my-scene") as HTMLElement;
+import gsap from 'gsap';
+import GUI from 'lil-gui';
 
-/**
- * Textures
- */
+import store from './store';
 
-const textureLoader = new THREE.TextureLoader();
-const matcapTexture = textureLoader.load('/textures/matcaps/1.png');
+window.addEventListener("resize", store.getState().handleWindowResize);
 
-/**
- * Font
- */
 const fontLoader = new FontLoader();
 
 fontLoader.load('/Press_Start_2P_Regular.json', (font) => {
+  const { scene } = store.getState();
+
   const bevelThickness = 0.03;
   const bevelSize = 0.02;
   const textGeometry = new TextGeometry(
@@ -125,66 +120,27 @@ fontLoader.load('/Press_Start_2P_Regular.json', (font) => {
 
 
 /**
- * Window sizes
+ * Textures
  */
-const sizes = {
-  width: window.innerWidth,
-  height: window.innerHeight,
-};
 
-window.addEventListener("resize", () => {
-  // change sizes
-  sizes.width = window.innerWidth;
-  sizes.height = window.innerHeight;
-  // update aspect ratio
-  camera.aspect = sizes.width / sizes.height;
-  // notify Three.js about camera aspect change
-  camera.updateProjectionMatrix();
-  // resize renderer and the canvas size
-  renderer.setSize(sizes.width, sizes.height);
-  // just in case browser window got moved to i.e. an external monitor
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-});
+const textureLoader = new THREE.TextureLoader();
+const matcapTexture = textureLoader.load('/textures/matcaps/1.png');
 
-/**
- * Camera
- */
-CameraControls.install({ THREE });
-
-const camera = new THREE.PerspectiveCamera(
-  60, // vertical FOV
-  sizes.width / sizes.height, // aspect ratio
-  0.1, // near-distance cutoff
-  100 // far-distance cutoff
-);
-camera.position.set(1, 1, 5);
-const cameraControls = new CameraControls(camera, canvas);
-
-/**
- * Scene
- */
-const scene = new THREE.Scene();
-scene.add(camera);
-scene.add(new THREE.AxesHelper(3));
-
-/**
- * Renderer
- */
-const renderer = new THREE.WebGLRenderer({ canvas });
-renderer.setSize(sizes.width, sizes.height);
-renderer.render(scene, camera);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 /**
  * Handle fullsize
  */
 window.addEventListener("dblclick", () => {
+  const { canvas: { element: canvasElement } } = store.getState()
+  if (!canvasElement) return;
+
   const fullscreenElement =
     // @ts-expect-error webkitFullscreenElement is a Safari shit property
     document.fullscreenElement || document.webkitFullscreenElement;
+
   if (!fullscreenElement) {
-    canvas.requestFullscreen
-      ? canvas.requestFullscreen()
+    canvasElement.requestFullscreen
+      ? canvasElement.requestFullscreen()
       : // @ts-expect-error webkitRequestFullscreenElement is also a Safari shit property
       canvas.webkitRequestFullscreen?.();
   } else {
@@ -198,6 +154,7 @@ window.addEventListener("dblclick", () => {
 /**
  * Animation
  */
+const { renderer, cameraControls, scene, camera } = store.getState();
 const clock = new THREE.Clock();
 const startTime = clock.getElapsedTime();
 const tick = () => {
