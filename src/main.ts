@@ -6,7 +6,7 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import gsap from 'gsap';
 import GUI from 'lil-gui';
 
-import store from './store';
+import store from './store/store';
 
 window.addEventListener("resize", store.getState().handleWindowResize);
 
@@ -154,15 +154,9 @@ window.addEventListener("dblclick", () => {
 /**
  * Animation
  */
-const { renderer, cameraControls, scene, camera } = store.getState();
-const clock = new THREE.Clock();
-const startTime = clock.getElapsedTime();
+const { renderer, scene, camera } = store.getState();
 const tick = () => {
-  const elapsedTime = clock.getElapsedTime();
-  cameraControls.update(elapsedTime - startTime);
-
   renderer.render(scene, camera);
-
   requestAnimationFrame(tick);
 };
 
