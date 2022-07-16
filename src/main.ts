@@ -154,9 +154,10 @@ window.addEventListener("dblclick", () => {
 /**
  * Animation
  */
-const { renderer, scene, camera } = store.getState();
+const { renderer, scene, camera, orbitControls } = store.getState();
 const tick = () => {
   renderer.render(scene, camera);
+  orbitControls.update();
   requestAnimationFrame(tick);
 };
 

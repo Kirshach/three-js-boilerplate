@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 
 import create from 'zustand/vanilla';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import { Store } from '../types';
 
@@ -11,17 +10,18 @@ import {
   updateCamera,
   createRenderer,
   createCamera,
-  createScene
+  createScene,
+  createOrbitControls
 } from './utils';
 
 const canvasElement = getCanvasElement();
-const camera = createCamera();
-const scene = createScene(camera, new THREE.AxesHelper(3));
 
 if (!canvasElement) throw new Error('No canvas found');
 
+const camera = createCamera();
+const orbitControls = createOrbitControls(camera, canvasElement);
+const scene = createScene(camera, new THREE.AxesHelper(3));
 const renderer = createRenderer(canvasElement, scene, camera);
-const orbitControls = new OrbitControls(camera, canvasElement);
 
 const store = create<Store>((_set) => ({
   camera,

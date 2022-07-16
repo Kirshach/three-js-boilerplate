@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+
 import {
   FOV,
   NEAR_CAMERA_FRUSTRUM,
@@ -54,3 +56,11 @@ export const updateCamera = (camera: THREE.PerspectiveCamera): void => {
   camera.updateProjectionMatrix();
 };
 
+export const createOrbitControls = (
+  camera: THREE.PerspectiveCamera,
+  canvasElement: HTMLCanvasElement
+): OrbitControls => {
+  const orbitControls = new OrbitControls(camera, canvasElement);
+  orbitControls.enableDamping = true;
+  return orbitControls;
+};
