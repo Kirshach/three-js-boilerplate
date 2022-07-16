@@ -21,7 +21,6 @@
     "vite": "^2.9.9"
   },
   "dependencies": {
-    "camera-controls": "^1.34.5",
     "gsap": "^3.10.4",
     "lil-gui": "^0.16.1",
     "three": "^0.140.2",
