@@ -4,7 +4,6 @@ import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 
 import gsap from 'gsap';
-import GUI from 'lil-gui';
 
 import store from './store/store';
 
@@ -68,38 +67,7 @@ fontLoader.load('/Press_Start_2P_Regular.json', (font) => {
   // help visualise bounding box
   const box = new THREE.BoxHelper(text, 0xff0000)
   scene.add(box);
-  /**
-   * Debug      
-   */
-  const gui = new GUI();
-  // prevent double clicks on debug UI from entering fullscreen mode
-  gui.domElement.addEventListener('dblclick', (evt) => evt.stopPropagation());
 
-  /**
-   * Position
-   */
-  const positionFolder = gui.addFolder('position');
-  for (const axis of Object.keys(text.position)) {
-    positionFolder.add(text.position, axis).min(-5).max(5);
-  }
-
-  gui.add(text, 'visible');
-  gui.addColor(matcapMaterial, 'color');
-  gui.add(box, 'visible').name('bounding box visible');
-
-  /**
-   * Spin animation
-   */
-  const functions = {
-    spin: () => {
-      gsap.to(text.rotation, { y: text.rotation.y + Math.PI * 2, duration: 1 });
-    },
-    getBoundingBox: () => {
-      window.alert(JSON.stringify(textGeometry.boundingBox))
-    }
-  };
-  gui.add(functions, 'spin');
-  gui.add(functions, 'getBoundingBox');
 
   /**
    * Donuts
