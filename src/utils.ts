@@ -6,7 +6,7 @@ import {
   FOV,
   NEAR_CAMERA_FRUSTRUM,
   FAR_CAMERA_FRUSTRUM
-} from '../const';
+} from './const';
 
 export const createRenderer = (
   canvasElement: HTMLCanvasElement,

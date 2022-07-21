@@ -5,19 +5,24 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 
 import gsap from 'gsap';
 
-import store from './store/store';
+import {
+  camera,
+  canvas,
+  handleWindowResize,
+  scene,
+  orbitControls,
+  renderer
+} from './init'
 
-window.addEventListener("resize", store.getState().handleWindowResize);
 
 const fontLoader = new FontLoader();
 
 fontLoader.load('/Press_Start_2P_Regular.json', (font) => {
-  const { scene } = store.getState();
 
   const bevelThickness = 0.03;
   const bevelSize = 0.02;
   const textGeometry = new TextGeometry(
-    'Fuck around',
+    'Fuck around\nand find out',
     {
       font,
       size: 0.5,
@@ -56,7 +61,7 @@ fontLoader.load('/Press_Start_2P_Regular.json', (font) => {
     - (max.z - bevelThickness) * 0.);
 
   // ATTENTION! All of the above could be done by just   ing
-  // textGeometry.ce  ()!
+  // textGeometry.center  ()!
   // It is here strictly for educational purposes :)
 
 
@@ -99,16 +104,13 @@ const matcapTexture = textureLoader.load('/textures/matcaps/1.png');
  * Handle fullsize
  */
 window.addEventListener("dblclick", () => {
-  const { canvas: { element: canvasElement } } = store.getState()
-  if (!canvasElement) return;
-
   const fullscreenElement =
     // @ts-expect-error webkitFullscreenElement is a Safari shit property
     document.fullscreenElement || document.webkitFullscreenElement;
 
   if (!fullscreenElement) {
-    canvasElement.requestFullscreen
-      ? canvasElement.requestFullscreen()
+    canvas.requestFullscreen
+      ? canvas.requestFullscreen()
       : // @ts-expect-error webkitRequestFullscreenElement is also a Safari shit property
       canvas.webkitRequestFullscreen?.();
   } else {
@@ -122,7 +124,6 @@ window.addEventListener("dblclick", () => {
 /**
  * Animation
  */
-const { renderer, scene, camera, orbitControls } = store.getState();
 const tick = () => {
   renderer.render(scene, camera);
   orbitControls.update();
