@@ -27,7 +27,7 @@ export const updateRenderer = (renderer: THREE.WebGLRenderer): void => {
 };
 
 export const getCanvasElement = (): HTMLCanvasElement | null =>
-  <HTMLCanvasElement>document.getElementById('my-scene');
+  <HTMLCanvasElement>document.getElementById('scene');
 
 export const createCamera = (): THREE.PerspectiveCamera => {
   const camera = new THREE.PerspectiveCamera(
