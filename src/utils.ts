@@ -36,7 +36,7 @@ export const createCamera = (): THREE.PerspectiveCamera => {
     NEAR_CAMERA_FRUSTRUM,
     FAR_CAMERA_FRUSTRUM
   );
-  camera.position.set(1, 1, 5);
+  camera.position.set(3, 1, 7);
   updateCamera(camera);
   return camera;
 };
