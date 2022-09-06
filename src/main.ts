@@ -3,8 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import { createCamera, updateCameraOnWindowResize } from './camera';
-import { getCanvasElement } from './canvas'
-import { addWindowResizeListener } from './canvas'
+import { getCanvasElement, addDblclickListener } from './canvas'
 
 const camera = createCamera(window);
 const canvas = getCanvasElement();
@@ -27,7 +26,7 @@ window.addEventListener("resize", () => {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 
-addWindowResizeListener(canvas);
+addDblclickListener(canvas);
 
 const tick = () => {
   renderer.render(scene, camera);
@@ -35,4 +34,4 @@ const tick = () => {
   requestAnimationFrame(tick);
 };
 
-requestAnimationFrame(tick);
+tick();

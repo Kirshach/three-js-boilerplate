@@ -1,2 +1,2 @@
 export * from './getCanvasElement';
-export * from './addWindowResizeListener';
+export * from './addDblclickListener';
