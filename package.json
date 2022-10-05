@@ -21,6 +21,7 @@
     "vite": "3.1.4"
   },
   "dependencies": {
+    "inversify": "6.0.1",
     "lil-gui": "0.17.0",
     "three": "0.145.0"
   }

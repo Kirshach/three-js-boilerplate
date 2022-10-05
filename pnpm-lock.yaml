@@ -9,6 +9,7 @@ specifiers:
   eslint-import-resolver-typescript: 3.4.1
   eslint-plugin-import: 2.26.0
   eslint-plugin-prettier: 4.2.1
+  inversify: ^6.0.1
   lil-gui: 0.17.0
   prettier: 2.7.1
   three: 0.145.0
@@ -16,6 +17,7 @@ specifiers:
   vite: 3.1.4
 
 dependencies:
+  inversify: 6.0.1
   lil-gui: 0.17.0
   three: 0.145.0
 
@@ -1236,6 +1238,10 @@ packages:
       has: 1.0.3
       side-channel: 1.0.4
     dev: true
+
+  /inversify/6.0.1:
+    resolution: {integrity: sha512-B3ex30927698TJENHR++8FfEaJGqoWOgI6ZY5Ht/nLUsFCwHn6akbwtnUAPCgUepAnTpe2qHxhDNjoKLyz6rgQ==}
+    dev: false
 
   /is-bigint/1.0.4:
     resolution: {integrity: sha512-zB9CruMamjym81i2JZ3UMn54PKGsQzsJeo6xvN3HJJ4CAsQNB6iRutp2To77OfCNuoxspsIhzaPoO1zyCEhFOg==}

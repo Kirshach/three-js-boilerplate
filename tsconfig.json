@@ -1,27 +1,25 @@
 {
     "compilerOptions": {
-        "target": "ESNext",
-        "useDefineForClassFields": true,
-        "lib": ["DOM", "DOM.Iterable", "ESNext"],
-        "skipLibCheck": false,
-        "esModuleInterop": false,
         "allowSyntheticDefaultImports": true,
-        "strict": true,
+        "baseUrl": "./src",
+        "emitDecoratorMetadata": true,
+        "esModuleInterop": false,
+        "experimentalDecorators": true,
         "forceConsistentCasingInFileNames": true,
+        "isolatedModules": true,
+        "lib": ["DOM", "DOM.Iterable", "ESNext"],
         "module": "ESNext",
         "moduleResolution": "node",
-        "resolveJsonModule": true,
-        "isolatedModules": true,
         "noEmit": true,
-        "baseUrl": "./src",
         "paths": {
-            "#components/*": ["components/*"],
-            "#types/*": ["types/*"],
-            "#hooks/*": ["hooks/*"],
-            "#const/*": ["const/*"],
-            "#store/*": ["store/*"],
-            "#workers/*": ["workers/*"]
-        }
+            "#utils/*": ["utils/*"]
+        },
+        "resolveJsonModule": true,
+        "skipLibCheck": false,
+        "strict": true,
+        "target": "ESNext",
+        "types": ["reflect-metadata"],
+        "useDefineForClassFields": true
     },
     "include": ["src"]
 }
