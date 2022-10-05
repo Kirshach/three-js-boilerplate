@@ -1,37 +1,14 @@
-import * as THREE from 'three';
+import Experience from './Experience';
 
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+// Canvas
+const canvas = document.getElementById('scene') as HTMLCanvasElement | null;
+if (!canvas) {
+  throw new Error('No canvas element found');
+}
 
-import { createCamera, updateCameraOnWindowResize } from './camera';
-import { getCanvasElement, addDblclickListener } from './canvas'
+Experience.initialize({ canvas, maxDPI: 2 });
+const experience = Experience.instance;
+console.log({ experience });
 
-const camera = createCamera(window);
-const canvas = getCanvasElement();
-const scene = new THREE.Scene();
-scene.add(camera, new THREE.AxesHelper(3));
+// TODO: test destruction of the scene
 
-const renderer = new THREE.WebGLRenderer({ canvas });
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.render(scene, camera);
-
-const orbitControls = new OrbitControls(camera, canvas);
-orbitControls.enableDamping = true;
-
-window.addEventListener("resize", () => {
-  updateCameraOnWindowResize(camera);
-  // resizes renderer and changes canvas size
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  // update pixel ratio in case browser window moved to a different screen
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-});
-
-addDblclickListener(canvas);
-
-const tick = () => {
-  renderer.render(scene, camera);
-  orbitControls.update();
-  requestAnimationFrame(tick);
-};
-
-tick();

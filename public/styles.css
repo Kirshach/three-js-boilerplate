@@ -1,9 +1,11 @@
 html {
-  overflow: hidden; /* prevent scroll (only necessary when camera is disabled) */
+  overflow: hidden;
 }
 
 body {
   margin: 0;
+  width: 100vw;
+  height: 100vh;
 }
 
 #scene {
@@ -11,4 +13,6 @@ body {
   top: 0;
   left: 0;
   outline: none; /* canvas may have outline when focused */
+  width: 100%;
+  height: 100%;
 }
