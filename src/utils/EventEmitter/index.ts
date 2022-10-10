@@ -16,7 +16,7 @@ abstract class EventEmitter<EventPayload, Events extends string> {
     }
   }
 
-  unsubscribe(event: Events, handler: Handler<EventPayload>) {
+  unsubscribe = (event: Events, handler: Handler<EventPayload>) => {
     const handlers = this.handlers[event];
     if (!handlers)
       return console.warn(`No handlers registered for ${event} event`);
@@ -28,7 +28,7 @@ abstract class EventEmitter<EventPayload, Events extends string> {
     handlers.splice(indexOfHandler, 1);
   }
 
-  emit(event: Events, payload: EventPayload) {
+  emit = (event: Events, payload: EventPayload) => {
     const handlers = this.handlers[event];
 
     if (!handlers) {
@@ -38,7 +38,7 @@ abstract class EventEmitter<EventPayload, Events extends string> {
     handlers.forEach(handler => handler(payload));
   }
 
-  protected destroy() {
+  protected destroy = () => {
     this.handlers = {};
   }
 }

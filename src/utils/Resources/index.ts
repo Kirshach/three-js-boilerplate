@@ -3,7 +3,6 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 import type { Resource, LoaderToResource, Source } from './types';
 import { sources } from './sources';
-import type { Sources } from './sources';
 
 import EventEmitter from '../EventEmitter';
 import { throwDevTimeError } from '../throwDevTimeError';
@@ -13,6 +12,7 @@ export enum ResourcesEvents {
 }
 
 class Resources extends EventEmitter<null, ResourcesEvents> {
+  sources = sources;
   loaded: {
     [Name in typeof sources[number]['name']]?: LoaderToResource[typeof sources[number]['type']];
   }
@@ -22,7 +22,7 @@ class Resources extends EventEmitter<null, ResourcesEvents> {
     cubeTexture: THREE.CubeTextureLoader,
   }
 
-  constructor(private sources: Sources) {
+  constructor() {
     super();
     this.loaded = {};
     this.loaders = {
@@ -63,7 +63,7 @@ class Resources extends EventEmitter<null, ResourcesEvents> {
     }
   }
 
-  handleLoaded<T extends Resource>(source: Source, file: T) {
+  handleLoaded = <T extends Resource>(source: Source, file: T) => {
     this.loaded[source.name] = file;
     if (Object.keys(this.loaded).length === this.sources.length) {
       this.emit(ResourcesEvents.FINISH_LOADING, null)

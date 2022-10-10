@@ -1,14 +1,8 @@
-import Experience from './Experience';
+import 'reflect-metadata';
 
-// Canvas
-const canvas = document.getElementById('scene') as HTMLCanvasElement | null;
-if (!canvas) {
-  throw new Error('No canvas element found');
-}
+import Experience from './experience';
 
-Experience.initialize({ canvas, maxDPI: 2 });
-const experience = Experience.instance;
-console.log({ experience });
+const experience = new Experience();
+console.log(experience);
 
 // TODO: test destruction of the scene
-

@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@types/node": "18.8.2",
     "@types/three": "0.143.0",
     "@typescript-eslint/eslint-plugin": "5.33.0",
     "@typescript-eslint/parser": "5.33.0",
@@ -18,11 +19,12 @@
     "eslint-plugin-prettier": "4.2.1",
     "prettier": "2.7.1",
     "typescript": "4.9.1-beta",
-    "vite": "3.1.4"
+    "vite": "3.1.6",
+    "vite-tsconfig-paths": "3.5.1"
   },
   "dependencies": {
-    "inversify": "6.0.1",
     "lil-gui": "0.17.0",
+    "reflect-metadata": "0.1.13",
     "three": "0.145.0"
   }
 }
