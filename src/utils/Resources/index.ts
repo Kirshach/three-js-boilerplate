@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 import type { Resource, LoaderToResource, Source } from './types';
@@ -25,8 +26,14 @@ class Resources extends EventEmitter<null, ResourcesEvents> {
   constructor() {
     super();
     this.loaded = {};
+
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath('/draco-loader/');
+    const gltfLoader = new GLTFLoader();
+    gltfLoader.setDRACOLoader(dracoLoader);
+
     this.loaders = {
-      gltf: new GLTFLoader(),
+      gltf: gltfLoader,
       texture: new THREE.TextureLoader,
       cubeTexture: new THREE.CubeTextureLoader,
     }
@@ -53,13 +60,16 @@ class Resources extends EventEmitter<null, ResourcesEvents> {
 
       case 'cubeTexture':
         if (typeof source.path === 'string') {
-          throwDevTimeError(`Expected '.path' property of a 'cubeTexture' object to be of type 'string[]'`);
+          throwDevTimeError(`Expected ".path" property of a "cubeTexture" object to be of type "string[]"`);
         }
 
         return this.loaders.cubeTexture.load(
           paths,
           (file) => this.handleLoaded(source, file)
         );
+
+      default:
+        throwDevTimeError(`Unknown source type "${source.type}" provided for "${source.name}" asset`);
     }
   }
 

@@ -14,15 +14,15 @@ import {
 } from '../three-js-services';
 
 class Experience {
-  public config: Config;
-  public scene: Scene;
-  public world: World;
-  public time: Time;
-  public resources: Resources;
-  public canvas: Canvas;
-  public camera: Camera;
-  public environment: Environment;
-  public renderer: Renderer;
+  private config: Config;
+  private scene: Scene;
+  private world: World;
+  private time: Time;
+  private resources: Resources;
+  private canvas: Canvas;
+  private camera: Camera;
+  private environment: Environment;
+  private renderer: Renderer;
 
   constructor() {
     // non-dependant classes

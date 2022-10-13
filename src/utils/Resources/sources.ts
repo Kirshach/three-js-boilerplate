@@ -11,6 +11,11 @@ export const sources = [
         'textures/environmentMap/pz.jpg',
         'textures/environmentMap/nz.jpg',
       ],
+  },
+  {
+    name: 'fox',
+    type: 'gltf',
+    path: '/models/Duck/glTF-Draco/Duck.gltf'
   }
 ] as const;
 
