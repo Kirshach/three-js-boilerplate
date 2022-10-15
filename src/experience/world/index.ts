@@ -1,24 +1,25 @@
 import * as THREE from 'three';
 
-import Scene from '../scene';
-import Resources, { ResourcesEvents } from '../../utils/Resources';
+import type Scene from '../scene';
+import type Loader from '../../utils/resources';
+import {LoaderEvents} from '../../utils/resources';
 
 class World {
   private objects: Record<string, THREE.Object3D> = {};
 
-  constructor(private scene: Scene, private resources: Resources) {
+  constructor(private scene: Scene, private resources: Loader) {
     this.addTestMesh();
   }
 
   private addTestMesh() {
     const testMesh = new THREE.Mesh(
       new THREE.BoxGeometry(1, 1, 1),
-      new THREE.MeshStandardMaterial(),
+      new THREE.MeshStandardMaterial()
     );
 
     this.scene.add(testMesh);
     this.resources.subscribe(
-      (ResourcesEvents.FINISH_LOADING),
+      LoaderEvents.FINISH_LOADING,
       () => null // this.handleFinishLoadingResources()
     );
   }

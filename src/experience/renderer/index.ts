@@ -1,9 +1,10 @@
 import * as THREE from 'three';
 
-import Camera from '../camera';
-import Config, { ConfigEventPayload } from '../config';
-import Scene from '../scene';
-import Canvas from '../canvas';
+import type Camera from '../camera';
+import type {ConfigEventPayload} from '../config';
+import type Config from '../config';
+import type Scene from '../scene';
+import type Canvas from '../canvas';
 
 class Renderer {
   threeJsRenderer: THREE.WebGLRenderer;
@@ -28,14 +29,14 @@ class Renderer {
     this.threeJsRenderer.setPixelRatio(Math.min(this.config.pixelRatio, this.config.DPI));
   }
 
-  handleResize = ({ width, height, pixelRatio }: ConfigEventPayload) => {
+  handleResize = ({width, height, pixelRatio}: ConfigEventPayload) => {
     this.threeJsRenderer.setSize(width, height);
     this.threeJsRenderer.setPixelRatio(Math.min(pixelRatio, this.config.DPI));
-  }
+  };
 
   render = () => {
     this.threeJsRenderer.render(this.scene, this.camera.element);
-  }
+  };
 }
 
 export default Renderer;

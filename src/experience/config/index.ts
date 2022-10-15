@@ -1,4 +1,4 @@
-import EventEmitter from '../../utils/EventEmitter';
+import EventEmitter from '../../utils/event-emitter';
 
 export interface ConfigEventPayload {
   width: number;
@@ -8,7 +8,7 @@ export interface ConfigEventPayload {
 
 export enum ConfigEvents {
   RESIZE = 'RESIZE',
-};
+}
 
 class Config extends EventEmitter<ConfigEventPayload, ConfigEvents> {
   private maxDPI = 2;
@@ -31,11 +31,11 @@ class Config extends EventEmitter<ConfigEventPayload, ConfigEvents> {
   private handleWindowResize = () => {
     this.width = window.innerWidth;
     this.height = window.innerHeight;
-    console.log({ height: this.height, width: this.width });
+    console.log({height: this.height, width: this.width});
     // handle the case where browser window is moved to a different screen
     this.pixelRatio = Math.min(window.devicePixelRatio, this.maxDPI);
     this.emit(ConfigEvents.RESIZE, this);
-  }
+  };
 
   public get DPI() {
     return Math.min(window.devicePixelRatio, this.maxDPI);
@@ -44,7 +44,7 @@ class Config extends EventEmitter<ConfigEventPayload, ConfigEvents> {
   public destroy = () => {
     window.removeEventListener('resize', this.handleWindowResize);
     super.destroy();
-  }
+  };
 }
 
 export default Config;

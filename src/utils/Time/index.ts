@@ -1,8 +1,8 @@
-import EventEmitter from '../EventEmitter';
+import EventEmitter from '../event-emitter';
 
 export enum TimeEvents {
   TICK = 'TICK',
-};
+}
 
 const animationFrameIds: number[] = [];
 
@@ -24,10 +24,10 @@ class Time extends EventEmitter<unknown, TimeEvents> {
     this.current = currentTime;
     this.emit(TimeEvents.TICK, this);
     animationFrameIds.push(window.requestAnimationFrame(this.tick));
-  }
+  };
 
   destroy() {
-    animationFrameIds.forEach((animationFrameId) => window.cancelAnimationFrame(animationFrameId));
+    animationFrameIds.forEach(animationFrameId => window.cancelAnimationFrame(animationFrameId));
     super.destroy();
   }
 }
