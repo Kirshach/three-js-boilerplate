@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import type Canvas from '../canvas';
-import type {ConfigEventPayload} from '../config';
+import type { ConfigEventPayload } from '../config';
 import type Config from '../config';
 import type Scene from '../scene';
 
@@ -25,7 +25,7 @@ class Camera {
     this.controls.enableDamping = true;
   }
 
-  handleResize({width, height}: ConfigEventPayload) {
+  handleResize({ width, height }: ConfigEventPayload) {
     this.element.aspect = width / height;
     this.element.updateProjectionMatrix();
   }

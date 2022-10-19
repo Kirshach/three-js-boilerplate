@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
-        "baseUrl": "./src",
+        "baseUrl": ".",
         "declaration": true,
         "esModuleInterop": false,
         "forceConsistentCasingInFileNames": true,
@@ -11,13 +11,18 @@
         "moduleResolution": "node",
         "noEmit": true,
         "paths": {
-            "???/*": ["???/*"]
+            "???/*": ["src/???/*"]
         },
         "resolveJsonModule": true,
         "skipLibCheck": false,
         "strict": true,
         "target": "ESNext",
+        "types": ["node", "three"],
+        "typeRoots": [
+          "node_modules/@types"
+        ],
         "useDefineForClassFields": true
     },
-    "include": ["src"]
+    "include": ["src"],
+    "exclude": ["node_modules", "dist"]
 }

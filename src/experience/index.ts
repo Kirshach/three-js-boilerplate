@@ -1,27 +1,31 @@
-import Loader, {LoaderEvents} from '../utils/resources';
-import Time, {TimeEvents} from '../utils/Time';
+import Loader, { LoaderEvents } from '../utils/resources';
+import Time, { TimeEvents } from '../utils/Time';
 
-import type {ConfigEventPayload} from './config';
+import type { ConfigEventPayload } from './config';
 import Camera from './camera';
-import Config, {ConfigEvents} from './config';
+import Config, { ConfigEvents } from './config';
 import Renderer from './renderer';
 import World from './world';
 import Scene from './scene';
 import Canvas from './canvas';
 import Environment from './environment';
 
-class Experience {
-  private config: Config;
-  private scene: Scene;
-  private world: World;
-  private time: Time;
-  private resources: Loader;
-  private canvas: Canvas;
-  private camera: Camera;
-  private environment: Environment;
-  private renderer: Renderer;
+export interface ExperienceConfig {
+  transparent?: boolean,
+};
 
-  constructor() {
+class Experience {
+  public config: Config;
+  public scene: Scene;
+  public world: World;
+  public time: Time;
+  public resources: Loader;
+  public canvas: Canvas;
+  public camera: Camera;
+  public environment: Environment;
+  public renderer: Renderer;
+
+  constructor({ }: ExperienceConfig) {
     // non-dependant classes
     this.config = new Config();
     this.canvas = new Canvas();

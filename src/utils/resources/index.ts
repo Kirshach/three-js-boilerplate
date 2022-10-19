@@ -1,12 +1,12 @@
 import * as THREE from 'three';
-import {DRACOLoader} from 'three/examples/jsm/loaders/DRACOLoader';
-import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-import type {Resource, LoaderToResource, Source} from './types';
-import {sources} from './sources';
+import type { Resource, LoaderToResource, Source } from './types';
+import { sources } from './sources';
 
 import EventEmitter from '../event-emitter';
-import {throwDevTimeError} from '../throwDevTimeError';
+import { throwDevTimeError } from '../throwDevTimeError';
 
 export enum LoaderEvents {
   FINISH_LOADING = 'FINISH_LOADING',
@@ -81,5 +81,5 @@ class Loader extends EventEmitter<null, LoaderEvents> {
 }
 
 export default Loader;
-export {sources} from './sources';
+export { sources } from './sources';
 export * from './types';
