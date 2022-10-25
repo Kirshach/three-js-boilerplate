@@ -1,12 +1,12 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-import type Canvas from '../canvas';
+import type { Canvas } from '../canvas';
 import type { ConfigEventPayload } from '../config';
-import type Config from '../config';
-import type Scene from '../scene';
+import type { Config } from '../config';
+import type { Scene } from '../scene';
 
-class Camera {
+export class Camera {
   public element: THREE.PerspectiveCamera;
   private controls: OrbitControls;
 
@@ -25,22 +25,20 @@ class Camera {
     this.controls.enableDamping = true;
   }
 
-  handleResize({ width, height }: ConfigEventPayload) {
+  public handleResize({ width, height }: ConfigEventPayload) {
     this.element.aspect = width / height;
     this.element.updateProjectionMatrix();
   }
 
-  update() {
-    // This makes damping work properly
-    this.controls.update();
+  public update() {
+    this.controls.update(); // This makes damping work properly
   }
 
-  destroy() {
+  public destroy() {
+    // TODO: test this
     this.scene.remove(this.element);
     this.element.clear();
     this.element.removeFromParent();
     this.controls.dispose();
   }
-}
-
-export default Camera;
+};
