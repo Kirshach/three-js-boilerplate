@@ -11,7 +11,8 @@ export enum LoaderEvents {
 };
 
 export class Loader extends EventEmitter<null, LoaderEvents> {
-  manager = new THREE.LoadingManager;
+  // TODO: make use of the manager
+  private manager = new THREE.LoadingManager;
   private loaders: {
     gltf?: GLTFLoader;
     texture?: THREE.TextureLoader;
