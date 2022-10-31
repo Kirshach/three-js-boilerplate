@@ -9,9 +9,3 @@ export interface ConfigParameters {
   transparent?: boolean;
   resources: Resource[];
 }
-
-export interface ConfigEventPayload {
-  width: number;
-  height: number;
-  pixelRatio: number;
-}

@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 
-import type { Scene } from '../scene';
+import type {Scene} from '../scene';
 
 export class World {
   private objects: Record<string, THREE.Object3D> = {};
 
-  constructor(private scene: Scene) { }
+  constructor(private scene: Scene) {}
 
   public add(object: THREE.Object3D, name: string) {
     if (this.objects[name]) {
@@ -15,6 +15,10 @@ export class World {
     this.scene.add(object);
   }
 
-  public remove() { /* Not implemented */ }
-  public handleFinishLoadingResources() { /* Not implemented */ }
-};
+  public remove() {
+    /* Not implemented */
+  }
+  public handleFinishLoadingResources() {
+    /* Not implemented */
+  }
+}

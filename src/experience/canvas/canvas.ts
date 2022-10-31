@@ -1,4 +1,4 @@
-import { ConfigParameters } from "../config";
+import {ConfigParameters} from '../config';
 
 export class Canvas {
   element: HTMLCanvasElement;

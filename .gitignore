@@ -129,6 +129,7 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-# code edirots
+# code editors
 .idea
 .vscode
+*.code-workspace

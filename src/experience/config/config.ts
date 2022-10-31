@@ -1,12 +1,8 @@
-import EventEmitter from '../../utils/event-emitter';
+import type {ConfigParameters} from './types';
 
-import type { ConfigParameters, ConfigEventPayload } from './types';
+import {EventEmitter} from '../../types/event-emitter';
 
-export enum ConfigEvents {
-  RESIZE = 'RESIZE',
-};
-
-export class Config extends EventEmitter<ConfigEventPayload, ConfigEvents> {
+export class Config {
   private maxDPI = 2;
   public width: number;
   public height: number;
@@ -14,18 +10,16 @@ export class Config extends EventEmitter<ConfigEventPayload, ConfigEvents> {
   public transparent?: boolean;
   public canvas: HTMLCanvasElement;
 
-  constructor(config: ConfigParameters) {
-    super();
-
+  constructor(private emitter: EventEmitter, initialConfig: ConfigParameters) {
     // mandatory fields
-    this.canvas = config.canvas;
+    this.canvas = initialConfig.canvas;
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     // restrict maximum `pixelRatio` to not overload mobile GPUs
     this.pixelRatio = Math.min(window.devicePixelRatio, this.maxDPI);
 
     // optional fields
-    this.transparent = config.transparent;
+    this.transparent = initialConfig.transparent;
 
     // event listeners
     window.addEventListener('resize', this.handleWindowResize);
@@ -35,10 +29,14 @@ export class Config extends EventEmitter<ConfigEventPayload, ConfigEvents> {
   private handleWindowResize = () => {
     this.width = window.innerWidth;
     this.height = window.innerHeight;
-    console.log({ height: this.height, width: this.width });
+    console.log({height: this.height, width: this.width});
     // handle the case where browser window is moved to a different screen
     this.pixelRatio = Math.min(window.devicePixelRatio, this.maxDPI);
-    this.emit(ConfigEvents.RESIZE, this);
+    this.emitter.emit('experience/resize', {
+      width: this.width,
+      height: this.height,
+      pixelRatio: this.pixelRatio,
+    });
   };
 
   public get DPI() {
@@ -47,6 +45,5 @@ export class Config extends EventEmitter<ConfigEventPayload, ConfigEvents> {
 
   public destroy() {
     window.removeEventListener('resize', this.handleWindowResize);
-    super.destroy();
-  };
+  }
 }

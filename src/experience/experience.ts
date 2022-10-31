@@ -1,16 +1,18 @@
-import { Loader } from '../utils/loader';
-import { Time, TimeEvents } from '../utils/time';
+import mitt from 'mitt';
 
-import { Camera } from './camera';
-import { Canvas } from './canvas';
-import { Config, ConfigEvents } from './config';
-import { Renderer } from './renderer';
-import { World } from './world';
-import { Scene } from './scene';
+import {Config, type ConfigParameters} from './config';
+import {Loader} from './helpers/loader';
+import {Time} from './helpers/time';
+import {Camera} from './camera';
+import {Canvas} from './canvas';
+import {Renderer} from './renderer';
+import {World} from './world';
+import {Scene} from './scene';
 
-import type { ConfigEventPayload, ConfigParameters } from './config';
+import type {EventEmitter, Events} from '../types/event-emitter';
 
 export class Experience {
+  private emitter: EventEmitter;
   private scene: Scene;
   private time: Time;
   public config: Config;
@@ -21,42 +23,42 @@ export class Experience {
   public renderer: Renderer;
 
   public constructor(parameters: ConfigParameters) {
-    // non-dependant classes
-    this.config = new Config(parameters);
+    this.emitter = mitt<Events>();
+    this.config = new Config(this.emitter, parameters);
     this.canvas = new Canvas(parameters);
     this.scene = new Scene();
-    this.time = new Time();
+    this.time = new Time(this.emitter);
     this.loader = new Loader();
 
-    // dependant classes
     this.camera = new Camera(this.scene, this.canvas, this.config);
     this.renderer = new Renderer(this.config, this.scene, this.camera);
     this.world = new World(this.scene);
 
-    // TODO: create a global event bus instead
-    // event listeners
-    this.config.subscribe(ConfigEvents.RESIZE, this.handleResize);
+    this.emitter.on('experience/resize', this.handleResize);
   }
 
   public start() {
-    this.time.subscribe(TimeEvents.TICK, this.handleTick);
+    this.emitter.on('time/tick', this.handleTick);
   }
 
-  private handleResize = (payload: ConfigEventPayload) => {
+  private handleResize = (payload: Events['experience/resize']) => {
     this.camera.handleResize(payload);
     this.renderer.handleResize(payload);
   };
 
-  private handleTick = () => {
+  private handleTick = (_timeData: Events['time/tick']) => {
     this.camera.update();
     this.renderer.render();
   };
 
   // TODO: test destruction of the scene
+  // and assure all events are unsubbed
   public destroy = () => {
+    this.emitter.off('experience/resize', this.handleResize);
+    this.emitter.off('time/tick', this.handleTick);
     this.time.destroy();
     this.config.destroy();
     this.scene.clear(); // anything else to clear up the scene?
     this.camera.destroy();
   };
-};
+}

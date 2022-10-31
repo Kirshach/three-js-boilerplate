@@ -18,21 +18,21 @@ export default defineConfig({
       fileName: 'three-way'
     },
     rollupOptions: {
-      // make sure to externalize deps that shouldn't be bundled into the library
+      // to externalize deps that shouldn't be bundled into the library
       external: [
-        // 'three',
-        // 'three/examples/jsm/loaders/DRACOLoader',
-        // 'three/examples/jsm/controls/OrbitControls',
-        // 'three/examples/jsm/loaders/GLTFLoader'
+        'three',
+        'three/examples/jsm/loaders/DRACOLoader',
+        'three/examples/jsm/controls/OrbitControls',
+        'three/examples/jsm/loaders/GLTFLoader'
       ],
       output: {
         // Provide global variables to use in the build
         // (peer deps, essentially, cause there would be no i.e. 'THREE' in the build)
         globals: {
-          // 'three': 'THREE',
-          // 'three/examples/jsm/loaders/DRACOLoader': 'DRACOLoader',
-          // 'three/examples/jsm/controls/OrbitControls': 'OrbitControls',
-          // 'three/examples/jsm/loaders/GLTFLoader': 'GLTFLoader',
+          'three': 'THREE',
+          'three/examples/jsm/loaders/DRACOLoader': 'DRACOLoader',
+          'three/examples/jsm/controls/OrbitControls': 'OrbitControls',
+          'three/examples/jsm/loaders/GLTFLoader': 'GLTFLoader',
         },
       },
     },

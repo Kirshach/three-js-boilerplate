@@ -2,19 +2,21 @@
   "name": "three-way",
   "author": "Dmitrii Kirshanov <kirshach@mail.ru>",
   "version": "0.0.1",
+  "type": "module",
   "files": [
     "dist"
   ],
-  "main": "./dist/three-way.mjs",
-  "module": "./dist/three-way.mjs",
+  "module": "./dist/three-way.js",
   "exports": {
     ".": {
-      "import": "./dist/three-way.mjs"
+      "import": "./dist/three-way.js"
     }
   },
   "scripts": {
+    "build": "npm run format && npm run lint && tsc && vite build",
     "dev": "vite",
-    "build": "tsc && vite build",
+    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
+    "lint": "eslint --ignore-path .eslintignore --ext .js,.ts .",
     "preview": "vite preview"
   },
   "devDependencies": {

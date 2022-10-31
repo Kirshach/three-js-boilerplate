@@ -18,4 +18,4 @@ export class Scene {
   public clear() {
     this.element.clear();
   }
-};
+}
