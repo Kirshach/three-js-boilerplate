@@ -1,10 +1,10 @@
 import * as THREE from 'three';
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-import type {Canvas} from '../canvas';
-import type {Config} from '../config';
-import type {Scene} from '../scene';
-import type {Events} from '../../types';
+import type { Canvas } from '../canvas';
+import type { Config } from '../config';
+import type { Scene } from '../scene';
+import type { Events } from '../helpers/event-emitter';
 
 export class Camera {
   public element: THREE.PerspectiveCamera;
@@ -25,7 +25,7 @@ export class Camera {
     this.controls.enableDamping = true;
   }
 
-  public handleResize({width, height}: Events['experience/resize']) {
+  public handleResize({ width, height }: Events['experience/resize']) {
     this.element.aspect = width / height;
     this.element.updateProjectionMatrix();
   }
@@ -41,4 +41,4 @@ export class Camera {
     this.element.removeFromParent();
     this.controls.dispose();
   }
-}
+};

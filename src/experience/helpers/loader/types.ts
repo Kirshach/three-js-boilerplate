@@ -16,4 +16,10 @@ export interface CubeTextureResource {
   preload?: boolean;
 }
 
-export type Resource = GLTFResource | TextureResource | CubeTextureResource;
+export interface Font {
+  type: 'font';
+  path: string;
+  preload?: boolean;
+}
+
+export type Resource = GLTFResource | TextureResource | CubeTextureResource | Font;

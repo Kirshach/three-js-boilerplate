@@ -7,6 +7,7 @@
     "dist"
   ],
   "module": "./dist/three-way.js",
+  "types": "./dist/three-way.d.ts",
   "exports": {
     ".": {
       "import": "./dist/three-way.js"
@@ -19,11 +20,15 @@
     "lint": "eslint --ignore-path .eslintignore --ext .js,.ts .",
     "preview": "vite preview"
   },
+  "dependencies": {
+    "mitt": "3.0.0"
+  },
   "devDependencies": {
     "@types/node": "^18.11.0",
     "@types/three": "^0.143.0",
     "@typescript-eslint/eslint-plugin": "5.40.1",
     "@typescript-eslint/parser": "5.40.1",
+    "@yushijinhun/three-minifier-rollup": "^0.4.0",
     "eslint": "8.22.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-import-resolver-typescript": "3.5.1",

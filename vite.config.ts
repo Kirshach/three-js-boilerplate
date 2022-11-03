@@ -1,14 +1,18 @@
 import path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import { threeMinifier } from "@yushijinhun/three-minifier-rollup";
 
 export default defineConfig({
   plugins: [
+    // TODO: test the minifier
+    { ...threeMinifier(), enforce: 'pre' },
     dts({
       insertTypesEntry: true,
     }),
   ],
   build: {
+    minify: false,
     lib: {
       // Could also be a dictionary or array of multiple entry points
       entry: path.resolve(__dirname, 'src/main.ts'),

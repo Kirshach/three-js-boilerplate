@@ -1,9 +1,9 @@
-import {ConfigParameters} from '../config';
+import { Config } from "../config";
 
 export class Canvas {
   element: HTMLCanvasElement;
 
-  constructor(config: ConfigParameters) {
+  constructor(config: Config) {
     this.element = config.canvas;
   }
 }

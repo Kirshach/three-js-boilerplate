@@ -1,15 +1,15 @@
 import mitt from 'mitt';
 
-import {Config, type ConfigParameters} from './config';
-import {Loader} from './helpers/loader';
-import {Time} from './helpers/time';
-import {Camera} from './camera';
-import {Canvas} from './canvas';
-import {Renderer} from './renderer';
-import {World} from './world';
-import {Scene} from './scene';
+import { Config, type ConfigParameters } from './config';
+import { Loader } from './helpers/loader';
+import { Time, } from './helpers/time';
+import { Camera } from './camera';
+import { Canvas } from './canvas';
+import { Renderer } from './renderer';
+import { World } from './world';
+import { Scene } from './scene';
 
-import type {EventEmitter, Events} from '../types/event-emitter';
+import type { EventEmitter, Events } from './helpers/event-emitter';
 
 export class Experience {
   private emitter: EventEmitter;
@@ -22,10 +22,10 @@ export class Experience {
   public camera: Camera;
   public renderer: Renderer;
 
-  public constructor(parameters: ConfigParameters) {
+  public constructor(initialConfig: ConfigParameters) {
     this.emitter = mitt<Events>();
-    this.config = new Config(this.emitter, parameters);
-    this.canvas = new Canvas(parameters);
+    this.config = new Config(this.emitter, initialConfig);
+    this.canvas = new Canvas(this.config);
     this.scene = new Scene();
     this.time = new Time(this.emitter);
     this.loader = new Loader();
@@ -38,6 +38,7 @@ export class Experience {
   }
 
   public start() {
+    // TODO: add dev-time check for whether the method has been called?
     this.emitter.on('time/tick', this.handleTick);
   }
 
@@ -61,4 +62,4 @@ export class Experience {
     this.scene.clear(); // anything else to clear up the scene?
     this.camera.destroy();
   };
-}
+};
