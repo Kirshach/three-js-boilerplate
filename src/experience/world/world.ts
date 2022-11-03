@@ -1,17 +1,17 @@
+import type { Object3D } from 'three';
 import type { Scene } from '../scene';
-import type { ThreeWayObject } from '../../types';
 
 export class World {
-  private objects: Record<string, ThreeWayObject> = {};
+  private objects: Record<string, Object3D> = {};
 
   constructor(private scene: Scene) { }
 
-  public add(object: ThreeWayObject, name: string) {
+  public add(object: Object3D, name: string) {
     if (this.objects[name]) {
       console.error(`Object with name ${name} already exists.`);
     }
     this.objects[name] = object;
-    this.scene.add(object.element);
+    this.scene.add(object);
   }
 
   public remove() {
