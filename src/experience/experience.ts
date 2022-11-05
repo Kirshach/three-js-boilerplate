@@ -1,7 +1,7 @@
 import mitt from 'mitt';
 
 import { Config, type ConfigParameters } from './config';
-import { Loader } from './helpers/loader';
+import { loader, type Loader } from './helpers/loader';
 import { Time, } from './helpers/time';
 import { Camera } from './camera';
 import { Canvas } from './canvas';
@@ -23,12 +23,12 @@ export class Experience {
   public renderer: Renderer;
 
   public constructor(initialConfig: ConfigParameters) {
+    this.loader = loader;
     this.emitter = mitt<Events>();
     this.config = new Config(this.emitter, initialConfig);
     this.canvas = new Canvas(this.config);
     this.scene = new Scene();
     this.time = new Time(this.emitter);
-    this.loader = new Loader();
 
     this.camera = new Camera(this.scene, this.canvas, this.config);
     this.renderer = new Renderer(this.config, this.scene, this.camera);

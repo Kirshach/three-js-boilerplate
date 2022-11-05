@@ -5,7 +5,6 @@ var __publicField = (obj, key, value) => {
   return value;
 };
 import * as THREE from "three";
-import { LoadingManager, Cache, CubeTextureLoader, TextureLoader } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 function mitt(n) {
   return { all: n = n || /* @__PURE__ */ new Map(), on: function(t, e) {
@@ -62,63 +61,65 @@ const throwDevTimeError = (message) => {
 };
 class Loader {
   constructor() {
-    __publicField(this, "manager", new LoadingManager());
+    __publicField(this, "manager", new THREE.LoadingManager());
     __publicField(this, "loaders", {});
-    Cache.enabled = true;
+    THREE.Cache.enabled = true;
   }
-  load({ type, path }) {
-    switch (type) {
-      case "gltf":
-        return new Promise(async (resolve, reject) => {
-          var _a, _b;
-          ((_b = (_a = this.loaders).gltf) != null ? _b : _a.gltf = await (async () => {
-            const glTFLoader = new (await import("three/examples/jsm/loaders/GLTFLoader")).GLTFLoader(this.manager);
-            const dracoLoader = new (await import("three/examples/jsm/loaders/DRACOLoader")).DRACOLoader(this.manager);
-            dracoLoader.setDecoderPath("/draco/");
-            glTFLoader.setDRACOLoader(dracoLoader);
-            return glTFLoader;
-          })()).load(
-            path,
-            (resource) => resolve(resource),
-            void 0,
-            (error) => reject(error)
-          );
-        });
-      case "texture":
-        return new Promise(async (resolve, reject) => {
-          var _a, _b;
-          ((_b = (_a = this.loaders).texture) != null ? _b : _a.texture = new TextureLoader()).load(
-            path,
-            (resource) => resolve(resource),
-            void 0,
-            (error) => reject(error)
-          );
-        });
-      case "cubeTexture":
-        return new Promise((resolve, reject) => {
-          var _a, _b;
-          ((_b = (_a = this.loaders).cubeTexture) != null ? _b : _a.cubeTexture = new CubeTextureLoader()).load(
-            path,
-            (resource) => resolve(resource),
-            void 0,
-            (error) => reject(error)
-          );
-        });
-      case "font":
-        return new Promise(async (resolve, reject) => {
-          var _a, _b;
-          ((_b = (_a = this.loaders).font) != null ? _b : _a.font = new (await import("./FontLoader.97d8c397.js")).FontLoader()).load(
-            path,
-            (resource) => resolve(resource),
-            void 0,
-            (error) => reject(error)
-          );
-        });
-      default:
-        return throwDevTimeError(`Unknown resource type "${type} " provided for file "${path} "`);
+  load(resource) {
+    if (resource.type === "gltf") {
+      return new Promise(async (resolve, reject) => {
+        var _a, _b;
+        ((_b = (_a = this.loaders).gltf) != null ? _b : _a.gltf = await (async () => {
+          const glTFLoader = new (await import("three/examples/jsm/loaders/GLTFLoader")).GLTFLoader(this.manager);
+          const dracoLoader = new (await import("three/examples/jsm/loaders/DRACOLoader")).DRACOLoader(this.manager);
+          dracoLoader.setDecoderPath("/draco/");
+          glTFLoader.setDRACOLoader(dracoLoader);
+          return glTFLoader;
+        })()).load(
+          resource.path,
+          (resource2) => resolve(resource2),
+          void 0,
+          (error) => reject(error)
+        );
+      });
     }
+    if (resource.type === "texture") {
+      return new Promise(async (resolve, reject) => {
+        var _a, _b;
+        ((_b = (_a = this.loaders).texture) != null ? _b : _a.texture = new THREE.TextureLoader()).load(
+          resource.path,
+          (resource2) => resolve(resource2),
+          void 0,
+          (error) => reject(error)
+        );
+      });
+    }
+    if (resource.type === "cubeTexture") {
+      return new Promise((resolve, reject) => {
+        var _a, _b;
+        ((_b = (_a = this.loaders).cubeTexture) != null ? _b : _a.cubeTexture = new THREE.CubeTextureLoader()).load(
+          resource.path,
+          (resource2) => resolve(resource2),
+          void 0,
+          (error) => reject(error)
+        );
+      });
+    }
+    if (resource.type === "font") {
+      return new Promise(async (resolve, reject) => {
+        var _a, _b;
+        ((_b = (_a = this.loaders).font) != null ? _b : _a.font = new (await import("./FontLoader.97d8c397.js")).FontLoader()).load(
+          resource.path,
+          (resource2) => resolve(resource2),
+          void 0,
+          (error) => reject(error)
+        );
+      });
+    }
+    return throwDevTimeError(`Unknown resource type "${resource.type} " provided for file "${resource.path} "`);
   }
 }
+const loader = new Loader();
 class Time {
   constructor(emitter) {
     __publicField(this, "start", Date.now());
@@ -191,11 +192,11 @@ class Renderer {
     this.config = config;
     this.scene = scene;
     this.camera = camera;
-    const { opacity, canvas, antialias } = this.config;
+    const { backgroundOpacity, canvas, antialias } = this.config;
     this.element = new THREE.WebGLRenderer({
       antialias,
       canvas,
-      alpha: opacity < 1
+      alpha: backgroundOpacity < 1
     });
     this.element.physicallyCorrectLights = true;
     this.element.outputEncoding = THREE.sRGBEncoding;
@@ -206,7 +207,7 @@ class Renderer {
     this.element.setSize(this.config.width, this.config.height);
     this.element.setPixelRatio(Math.min(this.config.pixelRatio, this.config.DPI));
     if (this.config.backgroundColor)
-      this.element.setClearColor(this.config.backgroundColor, opacity < 1 ? opacity : void 0);
+      this.element.setClearColor(this.config.backgroundColor, backgroundOpacity < 1 ? backgroundOpacity : void 0);
   }
   render() {
     this.element.render(this.scene.element, this.camera.element);
@@ -218,10 +219,12 @@ class World {
     this.scene = scene;
   }
   add(object, name) {
-    if (this.objects[name]) {
+    if (name && this.objects[name]) {
       console.error(`Object with name ${name} already exists.`);
     }
-    this.objects[name] = object;
+    if (!!name) {
+      this.objects[name] = object;
+    }
     this.scene.add(object);
   }
   remove() {
@@ -271,12 +274,12 @@ class Experience {
       this.scene.clear();
       this.camera.destroy();
     });
+    this.loader = loader;
     this.emitter = mitt();
     this.config = new Config(this.emitter, initialConfig);
     this.canvas = new Canvas(this.config);
     this.scene = new Scene();
     this.time = new Time(this.emitter);
-    this.loader = new Loader();
     this.camera = new Camera(this.scene, this.canvas, this.config);
     this.renderer = new Renderer(this.config, this.scene, this.camera);
     this.world = new World(this.scene);
@@ -287,5 +290,6 @@ class Experience {
   }
 }
 export {
-  Experience
+  Experience,
+  loader
 };

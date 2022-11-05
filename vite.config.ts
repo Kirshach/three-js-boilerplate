@@ -1,12 +1,12 @@
 import path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
-import { threeMinifier } from "@yushijinhun/three-minifier-rollup";
+// import { threeMinifier } from "@yushijinhun/three-minifier-rollup";
 
 export default defineConfig({
   plugins: [
     // TODO: test the minifier
-    { ...threeMinifier(), enforce: 'pre' },
+    // { ...threeMinifier(), enforce: 'pre' },
     dts({
       insertTypesEntry: true,
     }),
@@ -19,7 +19,7 @@ export default defineConfig({
       name: 'ThreeWay',
       // the proper extensions will be added
       formats: ['es'],
-      fileName: 'three-way'
+      fileName: 'three-way',
     },
     rollupOptions: {
       // to externalize deps that shouldn't be bundled into the library

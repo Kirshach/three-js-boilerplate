@@ -13,11 +13,11 @@ export class Renderer {
     private scene: Scene,
     private camera: Camera,
   ) {
-    const { opacity, canvas, antialias } = this.config;
+    const { backgroundOpacity, canvas, antialias } = this.config;
     this.element = new THREE.WebGLRenderer({
       antialias,
       canvas: canvas,
-      alpha: opacity < 1,
+      alpha: backgroundOpacity < 1,
     });
     this.element.physicallyCorrectLights = true;
     this.element.outputEncoding = THREE.sRGBEncoding;
@@ -29,7 +29,7 @@ export class Renderer {
     this.element.setPixelRatio(Math.min(this.config.pixelRatio, this.config.DPI));
 
     if (this.config.backgroundColor)
-      this.element.setClearColor(this.config.backgroundColor, opacity < 1 ? opacity : undefined);
+      this.element.setClearColor(this.config.backgroundColor, backgroundOpacity < 1 ? backgroundOpacity : undefined);
   }
 
   public handleResize = ({ width, height, pixelRatio }: Events['experience/resize']) => {

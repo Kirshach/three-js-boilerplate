@@ -1,5 +1,5 @@
 import { Config, type ConfigParameters } from './config';
-import { Loader } from './helpers/loader';
+import { type Loader } from './helpers/loader';
 import { Camera } from './camera';
 import { Canvas } from './canvas';
 import { Renderer } from './renderer';
