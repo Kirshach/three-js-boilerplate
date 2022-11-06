@@ -6,10 +6,11 @@ export declare class Config {
     antialias?: boolean;
     backgroundColor?: number | string;
     backgroundOpacity: number;
-    width: number;
+    canvas: HTMLCanvasElement;
+    cameraControls: boolean;
     height: number;
     pixelRatio: number;
-    canvas: HTMLCanvasElement;
+    width: number;
     constructor(emitter: EventEmitter, initialConfig: ConfigParameters);
     private handleWindowResize;
     get DPI(): number;

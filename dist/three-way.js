@@ -28,22 +28,24 @@ class Config {
     __publicField(this, "antialias");
     __publicField(this, "backgroundColor");
     __publicField(this, "backgroundOpacity");
-    __publicField(this, "width");
+    __publicField(this, "canvas");
+    __publicField(this, "cameraControls");
     __publicField(this, "height");
     __publicField(this, "pixelRatio");
-    __publicField(this, "canvas");
+    __publicField(this, "width");
     __publicField(this, "handleWindowResize", () => {
       this.width = window.innerWidth;
       this.height = window.innerHeight;
       this.pixelRatio = Math.min(window.devicePixelRatio, this.maxDPI);
       this.emitter.emit("experience/resize", { width: this.width, height: this.height, pixelRatio: this.pixelRatio });
     });
-    var _a;
+    var _a, _b;
     this.emitter = emitter;
     this.canvas = initialConfig.canvas;
     this.antialias = initialConfig.antialias;
     this.backgroundColor = initialConfig.backgroundColor;
     this.backgroundOpacity = (_a = initialConfig.backgroundOpacity) != null ? _a : 1;
+    this.cameraControls = (_b = initialConfig.cameraControls) != null ? _b : true;
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     this.pixelRatio = Math.min(window.devicePixelRatio, this.maxDPI);
@@ -154,26 +156,30 @@ class Camera {
     this.element = new THREE.PerspectiveCamera(
       35,
       this.config.width / this.config.height,
-      0.1,
-      100
+      1,
+      500
     );
-    this.element.position.set(6, 4, 8);
+    this.element.position.set(60, 40, 80);
     this.scene.add(this.element);
-    this.controls = new OrbitControls(this.element, this.canvas.element);
-    this.controls.enableDamping = true;
+    if (config.cameraControls) {
+      this.controls = new OrbitControls(this.element, this.canvas.element);
+      this.controls.enableDamping = true;
+    }
   }
   handleResize({ width, height }) {
     this.element.aspect = width / height;
     this.element.updateProjectionMatrix();
   }
   update() {
-    this.controls.update();
+    var _a;
+    (_a = this.controls) == null ? void 0 : _a.update();
   }
   destroy() {
+    var _a;
     this.scene.remove(this.element);
     this.element.clear();
     this.element.removeFromParent();
-    this.controls.dispose();
+    (_a = this.controls) == null ? void 0 : _a.dispose();
   }
 }
 class Canvas {

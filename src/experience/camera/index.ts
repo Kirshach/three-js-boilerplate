@@ -8,21 +8,23 @@ import type { Events } from '../helpers/event-emitter';
 
 export class Camera {
   public element: THREE.PerspectiveCamera;
-  private controls: OrbitControls;
+  private controls?: OrbitControls;
 
   constructor(private scene: Scene, private canvas: Canvas, private config: Config) {
     // Camera itself
     this.element = new THREE.PerspectiveCamera(
       35,
       this.config.width / this.config.height,
-      0.1,
-      100
+      1,
+      500
     );
-    this.element.position.set(6, 4, 8);
+    this.element.position.set(60, 40, 80);
     this.scene.add(this.element);
     // Camera controls
-    this.controls = new OrbitControls(this.element, this.canvas.element);
-    this.controls.enableDamping = true;
+    if (config.cameraControls) {
+      this.controls = new OrbitControls(this.element, this.canvas.element);
+      this.controls.enableDamping = true;
+    }
   }
 
   public handleResize({ width, height }: Events['experience/resize']) {
@@ -31,7 +33,7 @@ export class Camera {
   }
 
   public update() {
-    this.controls.update(); // This makes damping work properly
+    this.controls?.update();
   }
 
   public destroy() {
@@ -39,6 +41,6 @@ export class Camera {
     this.scene.remove(this.element);
     this.element.clear();
     this.element.removeFromParent();
-    this.controls.dispose();
+    this.controls?.dispose();
   }
 };

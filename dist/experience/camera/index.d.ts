@@ -8,7 +8,7 @@ export declare class Camera {
     private canvas;
     private config;
     element: THREE.PerspectiveCamera;
-    private controls;
+    private controls?;
     constructor(scene: Scene, canvas: Canvas, config: Config);
     handleResize({ width, height }: Events['experience/resize']): void;
     update(): void;

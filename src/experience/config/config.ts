@@ -7,16 +7,18 @@ export class Config {
   public antialias?: boolean;
   public backgroundColor?: number | string;
   public backgroundOpacity: number;
-  public width: number;
+  public canvas: HTMLCanvasElement;
+  public cameraControls: boolean;
   public height: number;
   public pixelRatio: number;
-  public canvas: HTMLCanvasElement;
+  public width: number;
 
   constructor(private emitter: EventEmitter, initialConfig: ConfigParameters) {
     this.canvas = initialConfig.canvas;
     this.antialias = initialConfig.antialias;
     this.backgroundColor = initialConfig.backgroundColor;
     this.backgroundOpacity = initialConfig.backgroundOpacity ?? 1;
+    this.cameraControls = initialConfig.cameraControls ?? true;
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     // restrict maximum `pixelRatio` to not overload mobile GPUs

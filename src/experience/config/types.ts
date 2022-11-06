@@ -10,4 +10,5 @@ export interface ConfigParameters {
   backgroundColor?: string | number;
   resources?: Resource[];
   antialias?: boolean;
+  cameraControls?: boolean;
 };
