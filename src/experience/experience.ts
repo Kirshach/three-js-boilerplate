@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import mitt from 'mitt';
 
 import { Config, type ConfigParameters } from './config';
@@ -33,6 +34,9 @@ export class Experience {
     this.camera = new Camera(this.scene, this.canvas, this.config);
     this.renderer = new Renderer(this.config, this.scene, this.camera);
     this.world = new World(this.scene);
+    if (initialConfig.axesHelperLength) {
+      this.world.add(new THREE.AxesHelper(initialConfig.axesHelperLength));
+    }
 
     this.emitter.on('experience/resize', this.handleResize);
   }

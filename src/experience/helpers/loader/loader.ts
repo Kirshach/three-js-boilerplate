@@ -53,7 +53,10 @@ export class Loader {
       return new Promise<LoadedResource<T>>(async (resolve, reject) => {
         (this.loaders.texture ??= new THREE.TextureLoader()).load(
           resource.path,
-          (resource: THREE.Texture) => resolve(resource as LoadedResource<T>),
+          (resource: THREE.Texture) => {
+            resource.encoding = THREE.sRGBEncoding;
+            resolve(resource as LoadedResource<T>)
+          },
           undefined, // progress event currently not supported by Three.js
           (error) => reject(error))
       });
@@ -63,7 +66,10 @@ export class Loader {
       return new Promise<LoadedResource<T>>((resolve, reject) => {
         (this.loaders.cubeTexture ??= new THREE.CubeTextureLoader()).load(
           resource.path,
-          (resource: THREE.CubeTexture) => resolve(resource as LoadedResource<T>),
+          (resource: THREE.CubeTexture) => {
+            resource.encoding = THREE.sRGBEncoding;
+            resolve(resource as LoadedResource<T>)
+          },
           undefined, // progress event currently not supported by Three.js
           (error) => reject(error))
       });

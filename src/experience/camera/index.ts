@@ -10,7 +10,7 @@ export class Camera {
   public element: THREE.PerspectiveCamera;
   private controls?: OrbitControls;
 
-  constructor(private scene: Scene, private canvas: Canvas, private config: Config) {
+  public constructor(private scene: Scene, private canvas: Canvas, private config: Config) {
     // Camera itself
     this.element = new THREE.PerspectiveCamera(
       35,

@@ -4,10 +4,11 @@ export interface Resource {
     preload?: boolean;
 }
 export interface ConfigParameters {
-    canvas: HTMLCanvasElement;
+    antialias?: boolean;
+    axesHelperLength?: number;
     backgroundOpacity?: number;
     backgroundColor?: string | number;
-    resources?: Resource[];
-    antialias?: boolean;
     cameraControls?: boolean;
+    canvas: HTMLCanvasElement;
+    resources?: Resource[];
 }

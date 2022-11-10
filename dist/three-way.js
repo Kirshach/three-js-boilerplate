@@ -90,7 +90,10 @@ class Loader {
         var _a, _b;
         ((_b = (_a = this.loaders).texture) != null ? _b : _a.texture = new THREE.TextureLoader()).load(
           resource.path,
-          (resource2) => resolve(resource2),
+          (resource2) => {
+            resource2.encoding = THREE.sRGBEncoding;
+            resolve(resource2);
+          },
           void 0,
           (error) => reject(error)
         );
@@ -101,7 +104,10 @@ class Loader {
         var _a, _b;
         ((_b = (_a = this.loaders).cubeTexture) != null ? _b : _a.cubeTexture = new THREE.CubeTextureLoader()).load(
           resource.path,
-          (resource2) => resolve(resource2),
+          (resource2) => {
+            resource2.encoding = THREE.sRGBEncoding;
+            resolve(resource2);
+          },
           void 0,
           (error) => reject(error)
         );
@@ -289,6 +295,9 @@ class Experience {
     this.camera = new Camera(this.scene, this.canvas, this.config);
     this.renderer = new Renderer(this.config, this.scene, this.camera);
     this.world = new World(this.scene);
+    if (initialConfig.axesHelperLength) {
+      this.world.add(new THREE.AxesHelper(initialConfig.axesHelperLength));
+    }
     this.emitter.on("experience/resize", this.handleResize);
   }
   start() {
