@@ -7,7 +7,7 @@ export declare class Config {
     backgroundColor?: number | string;
     backgroundOpacity: number;
     canvas: HTMLCanvasElement;
-    cameraControls: boolean;
+    camera: ConfigParameters['camera'];
     height: number;
     pixelRatio: number;
     width: number;

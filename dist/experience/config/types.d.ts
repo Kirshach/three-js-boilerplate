@@ -8,7 +8,11 @@ export interface ConfigParameters {
     axesHelperLength?: number;
     backgroundOpacity?: number;
     backgroundColor?: string | number;
-    cameraControls?: boolean;
     canvas: HTMLCanvasElement;
     resources?: Resource[];
+    camera?: {
+        near?: number;
+        far?: number;
+        controls?: true;
+    };
 }

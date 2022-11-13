@@ -1,6 +1,6 @@
-import type { ConfigParameters } from './types';
+import type {ConfigParameters} from './types';
 
-import { EventEmitter } from '../helpers/event-emitter';
+import {EventEmitter} from '../helpers/event-emitter';
 
 export class Config {
   private maxDPI = 2;
@@ -8,7 +8,7 @@ export class Config {
   public backgroundColor?: number | string;
   public backgroundOpacity: number;
   public canvas: HTMLCanvasElement;
-  public cameraControls: boolean;
+  public camera: ConfigParameters['camera'];
   public height: number;
   public pixelRatio: number;
   public width: number;
@@ -18,7 +18,7 @@ export class Config {
     this.antialias = initialConfig.antialias;
     this.backgroundColor = initialConfig.backgroundColor;
     this.backgroundOpacity = initialConfig.backgroundOpacity ?? 1;
-    this.cameraControls = initialConfig.cameraControls ?? true;
+    this.camera = initialConfig.camera;
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     // restrict maximum `pixelRatio` to not overload mobile GPUs
@@ -34,8 +34,12 @@ export class Config {
     this.height = window.innerHeight;
     // handle the case where browser window is moved to a different screen
     this.pixelRatio = Math.min(window.devicePixelRatio, this.maxDPI);
-    this.emitter.emit('experience/resize', { width: this.width, height: this.height, pixelRatio: this.pixelRatio });
-  }
+    this.emitter.emit('experience/resize', {
+      width: this.width,
+      height: this.height,
+      pixelRatio: this.pixelRatio,
+    });
+  };
 
   public get DPI() {
     return Math.min(window.devicePixelRatio, this.maxDPI);
