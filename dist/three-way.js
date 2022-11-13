@@ -29,7 +29,7 @@ class Config {
     __publicField(this, "backgroundColor");
     __publicField(this, "backgroundOpacity");
     __publicField(this, "canvas");
-    __publicField(this, "cameraControls");
+    __publicField(this, "camera");
     __publicField(this, "height");
     __publicField(this, "pixelRatio");
     __publicField(this, "width");
@@ -37,15 +37,19 @@ class Config {
       this.width = window.innerWidth;
       this.height = window.innerHeight;
       this.pixelRatio = Math.min(window.devicePixelRatio, this.maxDPI);
-      this.emitter.emit("experience/resize", { width: this.width, height: this.height, pixelRatio: this.pixelRatio });
+      this.emitter.emit("experience/resize", {
+        width: this.width,
+        height: this.height,
+        pixelRatio: this.pixelRatio
+      });
     });
-    var _a, _b;
+    var _a;
     this.emitter = emitter;
     this.canvas = initialConfig.canvas;
     this.antialias = initialConfig.antialias;
     this.backgroundColor = initialConfig.backgroundColor;
     this.backgroundOpacity = (_a = initialConfig.backgroundOpacity) != null ? _a : 1;
-    this.cameraControls = (_b = initialConfig.cameraControls) != null ? _b : true;
+    this.camera = initialConfig.camera;
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     this.pixelRatio = Math.min(window.devicePixelRatio, this.maxDPI);
@@ -58,76 +62,6 @@ class Config {
     window.removeEventListener("resize", this.handleWindowResize);
   }
 }
-const throwDevTimeError = (message) => {
-  console.error(message);
-};
-class Loader {
-  constructor() {
-    __publicField(this, "manager", new THREE.LoadingManager());
-    __publicField(this, "loaders", {});
-    THREE.Cache.enabled = true;
-  }
-  load(resource) {
-    if (resource.type === "gltf") {
-      return new Promise(async (resolve, reject) => {
-        var _a, _b;
-        ((_b = (_a = this.loaders).gltf) != null ? _b : _a.gltf = await (async () => {
-          const glTFLoader = new (await import("three/examples/jsm/loaders/GLTFLoader")).GLTFLoader(this.manager);
-          const dracoLoader = new (await import("three/examples/jsm/loaders/DRACOLoader")).DRACOLoader(this.manager);
-          dracoLoader.setDecoderPath("/draco/");
-          glTFLoader.setDRACOLoader(dracoLoader);
-          return glTFLoader;
-        })()).load(
-          resource.path,
-          (resource2) => resolve(resource2),
-          void 0,
-          (error) => reject(error)
-        );
-      });
-    }
-    if (resource.type === "texture") {
-      return new Promise(async (resolve, reject) => {
-        var _a, _b;
-        ((_b = (_a = this.loaders).texture) != null ? _b : _a.texture = new THREE.TextureLoader()).load(
-          resource.path,
-          (resource2) => {
-            resource2.encoding = THREE.sRGBEncoding;
-            resolve(resource2);
-          },
-          void 0,
-          (error) => reject(error)
-        );
-      });
-    }
-    if (resource.type === "cubeTexture") {
-      return new Promise((resolve, reject) => {
-        var _a, _b;
-        ((_b = (_a = this.loaders).cubeTexture) != null ? _b : _a.cubeTexture = new THREE.CubeTextureLoader()).load(
-          resource.path,
-          (resource2) => {
-            resource2.encoding = THREE.sRGBEncoding;
-            resolve(resource2);
-          },
-          void 0,
-          (error) => reject(error)
-        );
-      });
-    }
-    if (resource.type === "font") {
-      return new Promise(async (resolve, reject) => {
-        var _a, _b;
-        ((_b = (_a = this.loaders).font) != null ? _b : _a.font = new (await import("./FontLoader.97d8c397.js")).FontLoader()).load(
-          resource.path,
-          (resource2) => resolve(resource2),
-          void 0,
-          (error) => reject(error)
-        );
-      });
-    }
-    return throwDevTimeError(`Unknown resource type "${resource.type} " provided for file "${resource.path} "`);
-  }
-}
-const loader = new Loader();
 class Time {
   constructor(emitter) {
     __publicField(this, "start", Date.now());
@@ -156,18 +90,19 @@ class Camera {
   constructor(scene, canvas, config) {
     __publicField(this, "element");
     __publicField(this, "controls");
+    var _a, _b, _c, _d, _e, _f;
     this.scene = scene;
     this.canvas = canvas;
     this.config = config;
     this.element = new THREE.PerspectiveCamera(
       35,
       this.config.width / this.config.height,
-      1,
-      500
+      (_b = (_a = this.config.camera) == null ? void 0 : _a.near) != null ? _b : 1,
+      (_d = (_c = this.config.camera) == null ? void 0 : _c.far) != null ? _d : 500
     );
-    this.element.position.set(60, 40, 80);
+    this.element.position.set(6, 4, 8);
     this.scene.add(this.element);
-    if (config.cameraControls) {
+    if (((_e = config.camera) == null ? void 0 : _e.controls) === true || ((_f = config.camera) == null ? void 0 : _f.controls) === void 0) {
       this.controls = new OrbitControls(this.element, this.canvas.element);
       this.controls.enableDamping = true;
     }
@@ -266,7 +201,6 @@ class Experience {
     __publicField(this, "time");
     __publicField(this, "config");
     __publicField(this, "world");
-    __publicField(this, "loader");
     __publicField(this, "canvas");
     __publicField(this, "camera");
     __publicField(this, "renderer");
@@ -286,7 +220,6 @@ class Experience {
       this.scene.clear();
       this.camera.destroy();
     });
-    this.loader = loader;
     this.emitter = mitt();
     this.config = new Config(this.emitter, initialConfig);
     this.canvas = new Canvas(this.config);
@@ -304,7 +237,78 @@ class Experience {
     this.emitter.on("time/tick", this.handleTick);
   }
 }
+const throwDevTimeError = (message) => {
+  console.error(message);
+};
+class Loader {
+  static load(resource) {
+    THREE.Cache.enabled = true;
+    if (resource.type === "gltf") {
+      return new Promise(async (resolve, reject) => {
+        var _a, _b;
+        ((_b = (_a = this.loaders).gltf) != null ? _b : _a.gltf = await (async () => {
+          const glTFLoader = new (await import("three/examples/jsm/loaders/GLTFLoader")).GLTFLoader(
+            this.manager
+          );
+          const dracoLoader = new (await import("three/examples/jsm/loaders/DRACOLoader")).DRACOLoader(this.manager);
+          dracoLoader.setDecoderPath("/draco/");
+          glTFLoader.setDRACOLoader(dracoLoader);
+          return glTFLoader;
+        })()).load(
+          resource.path,
+          (resource2) => resolve(resource2),
+          void 0,
+          (error) => reject(error)
+        );
+      });
+    }
+    if (resource.type === "texture") {
+      return new Promise(async (resolve, reject) => {
+        var _a, _b;
+        ((_b = (_a = this.loaders).texture) != null ? _b : _a.texture = new THREE.TextureLoader()).load(
+          resource.path,
+          (resource2) => {
+            resource2.encoding = THREE.sRGBEncoding;
+            resolve(resource2);
+          },
+          void 0,
+          (error) => reject(error)
+        );
+      });
+    }
+    if (resource.type === "cubeTexture") {
+      return new Promise((resolve, reject) => {
+        var _a, _b;
+        ((_b = (_a = this.loaders).cubeTexture) != null ? _b : _a.cubeTexture = new THREE.CubeTextureLoader()).load(
+          resource.path,
+          (resource2) => {
+            resource2.encoding = THREE.sRGBEncoding;
+            resolve(resource2);
+          },
+          void 0,
+          (error) => reject(error)
+        );
+      });
+    }
+    if (resource.type === "font") {
+      return new Promise(async (resolve, reject) => {
+        var _a, _b;
+        ((_b = (_a = this.loaders).font) != null ? _b : _a.font = new (await import("./FontLoader.97d8c397.js")).FontLoader()).load(
+          resource.path,
+          (resource2) => resolve(resource2),
+          void 0,
+          (error) => reject(error)
+        );
+      });
+    }
+    return throwDevTimeError(
+      `Unknown resource type "${resource.type} " provided for file "${resource.path} "`
+    );
+  }
+}
+__publicField(Loader, "manager", new THREE.LoadingManager());
+__publicField(Loader, "loaders", {});
 export {
   Experience,
-  loader
+  Loader
 };

@@ -1,2 +1,2 @@
 export { Experience } from './experience';
-export { loader } from './experience/helpers/loader';
+export { Loader } from './experience/helpers/loader';

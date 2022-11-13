@@ -1,16 +1,15 @@
 import * as THREE from 'three';
 import mitt from 'mitt';
 
-import { Config, type ConfigParameters } from './config';
-import { loader, type Loader } from './helpers/loader';
-import { Time, } from './helpers/time';
-import { Camera } from './camera';
-import { Canvas } from './canvas';
-import { Renderer } from './renderer';
-import { World } from './world';
-import { Scene } from './scene';
+import {Config, type ConfigParameters} from './config';
+import {Time} from './helpers/time';
+import {Camera} from './camera';
+import {Canvas} from './canvas';
+import {Renderer} from './renderer';
+import {World} from './world';
+import {Scene} from './scene';
 
-import type { EventEmitter, Events } from './helpers/event-emitter';
+import type {EventEmitter, Events} from './helpers/event-emitter';
 
 export class Experience {
   private emitter: EventEmitter;
@@ -18,13 +17,11 @@ export class Experience {
   private time: Time;
   public config: Config;
   public world: World;
-  public loader: Loader;
   public canvas: Canvas;
   public camera: Camera;
   public renderer: Renderer;
 
   public constructor(initialConfig: ConfigParameters) {
-    this.loader = loader;
     this.emitter = mitt<Events>();
     this.config = new Config(this.emitter, initialConfig);
     this.canvas = new Canvas(this.config);
@@ -66,4 +63,4 @@ export class Experience {
     this.scene.clear(); // anything else to clear up the scene?
     this.camera.destroy();
   };
-};
+}

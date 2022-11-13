@@ -1,5 +1,4 @@
 import { Config, type ConfigParameters } from './config';
-import { type Loader } from './helpers/loader';
 import { Camera } from './camera';
 import { Canvas } from './canvas';
 import { Renderer } from './renderer';
@@ -10,7 +9,6 @@ export declare class Experience {
     private time;
     config: Config;
     world: World;
-    loader: Loader;
     canvas: Canvas;
     camera: Camera;
     renderer: Renderer;
