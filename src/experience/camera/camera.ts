@@ -4,7 +4,7 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import type {Canvas} from '../canvas';
 import type {Config} from '../config';
 import type {Scene} from '../scene';
-import type {Events} from '../helpers/event-emitter';
+import type {Events} from '../event-emitter';
 
 export class Camera {
   public element: THREE.PerspectiveCamera;

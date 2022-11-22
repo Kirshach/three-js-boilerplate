@@ -1,28 +1,34 @@
-import type {ConfigParameters} from './types';
+import type {ConfigParameters, PhysicsConfig} from './types';
 
-import {EventEmitter} from '../helpers/event-emitter';
+import {EventEmitter} from '../event-emitter';
 
 export class Config {
-  private maxDPI = 2;
   public antialias?: boolean;
-  public backgroundColor?: number | string;
-  public backgroundOpacity: number;
+  public background: {
+    color?: number | string;
+    opacity: number;
+  };
   public canvas: HTMLCanvasElement;
   public camera: ConfigParameters['camera'];
   public height: number;
+  private maxDPI = 2;
+  public physics: Required<PhysicsConfig> = {debug: false, gravity: -9.82};
   public pixelRatio: number;
   public width: number;
 
   constructor(private emitter: EventEmitter, initialConfig: ConfigParameters) {
     this.canvas = initialConfig.canvas;
     this.antialias = initialConfig.antialias;
-    this.backgroundColor = initialConfig.backgroundColor;
-    this.backgroundOpacity = initialConfig.backgroundOpacity ?? 1;
+    this.background = {
+      color: initialConfig.backgroundColor,
+      opacity: initialConfig.backgroundOpacity ?? 1,
+    };
     this.camera = initialConfig.camera;
     this.width = window.innerWidth;
     this.height = window.innerHeight;
-    // restrict maximum `pixelRatio` to not overload mobile GPUs
-    this.pixelRatio = Math.min(window.devicePixelRatio, this.maxDPI);
+    this.pixelRatio = Math.min(window.devicePixelRatio, this.maxDPI); // restrict maximum `pixelRatio` to not overload mobile GPUs
+
+    Object.assign(this.physics, initialConfig.physics ?? {});
 
     // event listeners
     window.addEventListener('resize', this.handleWindowResize);

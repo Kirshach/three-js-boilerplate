@@ -4,16 +4,22 @@ export interface Resource {
   preload?: boolean;
 }
 
+export interface PhysicsConfig {
+  gravity: number;
+  debug: boolean;
+}
+
 export interface ConfigParameters {
   antialias?: boolean;
   axesHelperLength?: number;
   backgroundOpacity?: number;
   backgroundColor?: string | number;
-  canvas: HTMLCanvasElement;
-  resources?: Resource[];
   camera?: {
     near?: number;
     far?: number;
     controls?: true;
   };
+  canvas: HTMLCanvasElement;
+  resources?: Resource[];
+  physics?: Partial<PhysicsConfig>;
 }

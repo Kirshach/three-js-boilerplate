@@ -13,7 +13,8 @@ export declare class Experience {
     camera: Camera;
     renderer: Renderer;
     constructor(initialConfig: ConfigParameters);
-    start(): void;
+    initializePhysics(): Promise<void>;
+    start(): Promise<void>;
     private handleResize;
     private handleTick;
     destroy: () => void;

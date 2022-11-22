@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import type { Camera } from '../camera';
-import type { Events } from '../helpers/event-emitter';
+import type { Events } from '../event-emitter';
 import type { Config } from '../config';
 import type { Scene } from '../scene';
 export declare class Renderer {

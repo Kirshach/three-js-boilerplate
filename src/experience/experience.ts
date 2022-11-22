@@ -2,14 +2,15 @@ import * as THREE from 'three';
 import mitt from 'mitt';
 
 import {Config, type ConfigParameters} from './config';
-import {Time} from './helpers/time';
+import {Time} from './time';
 import {Camera} from './camera';
 import {Canvas} from './canvas';
 import {Renderer} from './renderer';
 import {World} from './world';
 import {Scene} from './scene';
 
-import type {EventEmitter, Events} from './helpers/event-emitter';
+import type {EventEmitter, Events} from './event-emitter';
+import {PhysicsConfig} from './config';
 
 export class Experience {
   private emitter: EventEmitter;
@@ -30,7 +31,7 @@ export class Experience {
 
     this.camera = new Camera(this.scene, this.canvas, this.config);
     this.renderer = new Renderer(this.config, this.scene, this.camera);
-    this.world = new World(this.scene);
+    this.world = new World(this.scene, this.emitter);
     if (initialConfig.axesHelperLength) {
       this.world.add(new THREE.AxesHelper(initialConfig.axesHelperLength));
     }
@@ -38,7 +39,11 @@ export class Experience {
     this.emitter.on('experience/resize', this.handleResize);
   }
 
-  public start() {
+  public async initializePhysics() {
+    return this.world.initialisePhysics(this.config);
+  }
+
+  public async start() {
     // TODO: add dev-time check for whether the method has been called?
     this.emitter.on('time/tick', this.handleTick);
   }
@@ -49,6 +54,7 @@ export class Experience {
   };
 
   private handleTick = (_timeData: Events['time/tick']) => {
+    this.world.update();
     this.camera.update();
     this.renderer.render();
   };

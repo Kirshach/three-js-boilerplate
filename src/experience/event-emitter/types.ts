@@ -8,6 +8,10 @@ type ExperienceEvents = {
   'experience/resize': {width: number; height: number; pixelRatio: number};
 };
 
-export type Events = TimeEvents & ExperienceEvents;
+type WorldEvents = {
+  'world/physics_initialized': undefined;
+};
+
+export type Events = TimeEvents & ExperienceEvents & WorldEvents;
 
 export type EventEmitter = Emitter<Events>;

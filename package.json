@@ -38,9 +38,12 @@
     "vite-tsconfig-paths": "3.5.1"
   },
   "peerDependencies": {
+    "cannon-es": "0.20.0",
     "three": "0.146.0"
   },
   "dependencies": {
-    "mitt": "3.0.0"
+    "cannon-es-debugger": "^1.0.0",
+    "mitt": "3.0.0",
+    "nanoid": "4.0.0"
   }
 }

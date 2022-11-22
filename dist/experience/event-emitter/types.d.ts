@@ -14,6 +14,9 @@ declare type ExperienceEvents = {
         pixelRatio: number;
     };
 };
-export declare type Events = TimeEvents & ExperienceEvents;
+declare type WorldEvents = {
+    'world/physics_initialized': undefined;
+};
+export declare type Events = TimeEvents & ExperienceEvents & WorldEvents;
 export declare type EventEmitter = Emitter<Events>;
 export {};

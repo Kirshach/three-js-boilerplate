@@ -24,13 +24,13 @@ function mitt(n) {
 }
 class Config {
   constructor(emitter, initialConfig) {
-    __publicField(this, "maxDPI", 2);
     __publicField(this, "antialias");
-    __publicField(this, "backgroundColor");
-    __publicField(this, "backgroundOpacity");
+    __publicField(this, "background");
     __publicField(this, "canvas");
     __publicField(this, "camera");
     __publicField(this, "height");
+    __publicField(this, "maxDPI", 2);
+    __publicField(this, "physics", { debug: false, gravity: -9.82 });
     __publicField(this, "pixelRatio");
     __publicField(this, "width");
     __publicField(this, "handleWindowResize", () => {
@@ -43,16 +43,19 @@ class Config {
         pixelRatio: this.pixelRatio
       });
     });
-    var _a;
+    var _a, _b;
     this.emitter = emitter;
     this.canvas = initialConfig.canvas;
     this.antialias = initialConfig.antialias;
-    this.backgroundColor = initialConfig.backgroundColor;
-    this.backgroundOpacity = (_a = initialConfig.backgroundOpacity) != null ? _a : 1;
+    this.background = {
+      color: initialConfig.backgroundColor,
+      opacity: (_a = initialConfig.backgroundOpacity) != null ? _a : 1
+    };
     this.camera = initialConfig.camera;
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     this.pixelRatio = Math.min(window.devicePixelRatio, this.maxDPI);
+    Object.assign(this.physics, (_b = initialConfig.physics) != null ? _b : {});
     window.addEventListener("resize", this.handleWindowResize);
   }
   get DPI() {
@@ -139,11 +142,11 @@ class Renderer {
     this.config = config;
     this.scene = scene;
     this.camera = camera;
-    const { backgroundOpacity, canvas, antialias } = this.config;
+    const { canvas, antialias } = this.config;
     this.element = new THREE.WebGLRenderer({
       antialias,
       canvas,
-      alpha: backgroundOpacity < 1
+      alpha: this.config.background.opacity < 1
     });
     this.element.physicallyCorrectLights = true;
     this.element.outputEncoding = THREE.sRGBEncoding;
@@ -153,30 +156,82 @@ class Renderer {
     this.element.shadowMap.type = THREE.PCFSoftShadowMap;
     this.element.setSize(this.config.width, this.config.height);
     this.element.setPixelRatio(Math.min(this.config.pixelRatio, this.config.DPI));
-    if (this.config.backgroundColor)
-      this.element.setClearColor(this.config.backgroundColor, backgroundOpacity < 1 ? backgroundOpacity : void 0);
+    if (this.config.background.color)
+      this.element.setClearColor(this.config.background.color, this.config.background.opacity);
   }
   render() {
     this.element.render(this.scene.element, this.camera.element);
   }
 }
-class World {
-  constructor(scene) {
-    __publicField(this, "objects", {});
-    this.scene = scene;
+let nanoid = (size = 21) => crypto.getRandomValues(new Uint8Array(size)).reduce((id, byte) => {
+  byte &= 63;
+  if (byte < 36) {
+    id += byte.toString(36);
+  } else if (byte < 62) {
+    id += (byte - 26).toString(36).toUpperCase();
+  } else if (byte > 62) {
+    id += "-";
+  } else {
+    id += "_";
   }
-  add(object, name) {
-    if (name && this.objects[name]) {
+  return id;
+}, "");
+class Entity {
+  constructor(object3D, body, name = nanoid()) {
+    this.object3D = object3D;
+    this.body = body;
+    this.name = name;
+  }
+}
+class World {
+  constructor(scene, emitter) {
+    __publicField(this, "physics");
+    __publicField(this, "nonPhysicalObjects", {});
+    __publicField(this, "physicalObjects", {});
+    this.scene = scene;
+    this.emitter = emitter;
+  }
+  async initialisePhysics(config) {
+    this.physics = new (await import("./index.24671d58.js").then((n) => n.i)).Physics(config.physics);
+    if (process.env.NODE_ENV === "development" && config.physics.debug) {
+      await this.physics.initialiseDebug(this.scene.element);
+    }
+    this.emitter.emit("world/physics_initialized");
+  }
+  add(worldObject, name = worldObject.name || nanoid()) {
+    const objectsCategory = worldObject instanceof Entity && worldObject.body ? "nonPhysicalObjects" : "physicalObjects";
+    if (this.objects[name]) {
       console.error(`Object with name ${name} already exists.`);
     }
-    if (!!name) {
-      this.objects[name] = object;
+    this[objectsCategory][name] = worldObject;
+    if (worldObject instanceof Entity) {
+      this.scene.add(worldObject.object3D);
+      if (worldObject.body) {
+        if (process.env.NODE_ENV === "development" && !this.physics) {
+          throw new Error(
+            "You attempted adding physics body, but the physics engine hasn't been initialized yet"
+          );
+        }
+        this.physics.add(worldObject.body);
+      }
+    } else {
+      this.scene.add(worldObject);
     }
-    this.scene.add(object);
+  }
+  get objects() {
+    return { ...this.nonPhysicalObjects, ...this.nonPhysicalObjects };
+  }
+  update() {
+    if (!this.physics) {
+      return;
+    }
+    for (const objectName in this.physicalObjects) {
+      this.physicalObjects[objectName];
+    }
+    this.physics.update();
   }
   remove() {
-  }
-  handleFinishLoadingResources() {
+    throw new Error("Not Implemented");
   }
 }
 class Scene {
@@ -209,6 +264,7 @@ class Experience {
       this.renderer.handleResize(payload);
     });
     __publicField(this, "handleTick", (_timeData) => {
+      this.world.update();
       this.camera.update();
       this.renderer.render();
     });
@@ -227,17 +283,22 @@ class Experience {
     this.time = new Time(this.emitter);
     this.camera = new Camera(this.scene, this.canvas, this.config);
     this.renderer = new Renderer(this.config, this.scene, this.camera);
-    this.world = new World(this.scene);
+    this.world = new World(this.scene, this.emitter);
     if (initialConfig.axesHelperLength) {
       this.world.add(new THREE.AxesHelper(initialConfig.axesHelperLength));
     }
     this.emitter.on("experience/resize", this.handleResize);
   }
-  start() {
+  async initializePhysics() {
+    return this.world.initialisePhysics(this.config);
+  }
+  async start() {
     this.emitter.on("time/tick", this.handleTick);
   }
 }
 const throwDevTimeError = (message) => {
+  if (process.env.NODE_ENV === "development")
+    throw new Error(message);
   console.error(message);
 };
 class Loader {
@@ -251,7 +312,7 @@ class Loader {
             this.manager
           );
           const dracoLoader = new (await import("three/examples/jsm/loaders/DRACOLoader")).DRACOLoader(this.manager);
-          dracoLoader.setDecoderPath("/draco/");
+          dracoLoader.setDecoderPath("../../assets/draco");
           glTFLoader.setDRACOLoader(dracoLoader);
           return glTFLoader;
         })()).load(
@@ -306,9 +367,10 @@ class Loader {
     );
   }
 }
-__publicField(Loader, "manager", new THREE.LoadingManager());
+__publicField(Loader, "manager");
 __publicField(Loader, "loaders", {});
 export {
+  Entity,
   Experience,
   Loader
 };

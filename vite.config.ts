@@ -1,5 +1,5 @@
 import path from 'path';
-import { defineConfig } from 'vite';
+import {defineConfig} from 'vite';
 import dts from 'vite-plugin-dts';
 // import { threeMinifier } from "@yushijinhun/three-minifier-rollup";
 
@@ -27,13 +27,13 @@ export default defineConfig({
         'three',
         'three/examples/jsm/loaders/DRACOLoader',
         'three/examples/jsm/controls/OrbitControls',
-        'three/examples/jsm/loaders/GLTFLoader'
+        'three/examples/jsm/loaders/GLTFLoader',
       ],
       output: {
         // Provide global variables to use in the build
         // (peer deps, essentially, cause there would be no i.e. 'THREE' in the build)
         globals: {
-          'three': 'THREE',
+          three: 'THREE',
           'three/examples/jsm/loaders/DRACOLoader': 'DRACOLoader',
           'three/examples/jsm/controls/OrbitControls': 'OrbitControls',
           'three/examples/jsm/loaders/GLTFLoader': 'GLTFLoader',

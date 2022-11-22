@@ -1,23 +1,19 @@
 import * as THREE from 'three';
 
-import type { Camera } from '../camera';
-import type { Events } from '../helpers/event-emitter';
-import type { Config } from '../config';
-import type { Scene } from '../scene';
+import type {Camera} from '../camera';
+import type {Events} from '../event-emitter';
+import type {Config} from '../config';
+import type {Scene} from '../scene';
 
 export class Renderer {
   public element: THREE.WebGLRenderer;
 
-  constructor(
-    private config: Config,
-    private scene: Scene,
-    private camera: Camera,
-  ) {
-    const { backgroundOpacity, canvas, antialias } = this.config;
+  constructor(private config: Config, private scene: Scene, private camera: Camera) {
+    const {canvas, antialias} = this.config;
     this.element = new THREE.WebGLRenderer({
       antialias,
       canvas: canvas,
-      alpha: backgroundOpacity < 1,
+      alpha: this.config.background.opacity < 1,
     });
     this.element.physicallyCorrectLights = true;
     this.element.outputEncoding = THREE.sRGBEncoding;
@@ -28,16 +24,16 @@ export class Renderer {
     this.element.setSize(this.config.width, this.config.height);
     this.element.setPixelRatio(Math.min(this.config.pixelRatio, this.config.DPI));
 
-    if (this.config.backgroundColor)
-      this.element.setClearColor(this.config.backgroundColor, backgroundOpacity < 1 ? backgroundOpacity : undefined);
+    if (this.config.background.color)
+      this.element.setClearColor(this.config.background.color, this.config.background.opacity);
   }
 
-  public handleResize = ({ width, height, pixelRatio }: Events['experience/resize']) => {
+  public handleResize = ({width, height, pixelRatio}: Events['experience/resize']) => {
     this.element.setSize(width, height);
     this.element.setPixelRatio(Math.min(pixelRatio, this.config.DPI));
   };
 
   public render() {
     this.element.render(this.scene.element, this.camera.element);
-  };
-};
+  }
+}

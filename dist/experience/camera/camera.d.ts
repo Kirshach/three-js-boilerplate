@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import type { Canvas } from '../canvas';
 import type { Config } from '../config';
 import type { Scene } from '../scene';
-import type { Events } from '../helpers/event-emitter';
+import type { Events } from '../event-emitter';
 export declare class Camera {
     private scene;
     private canvas;
