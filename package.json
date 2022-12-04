@@ -23,8 +23,8 @@
   "devDependencies": {
     "@types/node": "18.11.0",
     "@types/three": "0.146.0",
-    "@typescript-eslint/eslint-plugin": "5.40.1",
-    "@typescript-eslint/parser": "5.40.1",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
     "@yushijinhun/three-minifier-rollup": "0.4.0",
     "eslint": "8.22.0",
     "eslint-config-prettier": "8.5.0",
@@ -42,7 +42,7 @@
     "three": "^0.146.0"
   },
   "dependencies": {
-    "cannon-es-debugger": "^1.0.0",
+    "cannon-es-debugger": "1.0.0",
     "mitt": "3.0.0",
     "nanoid": "4.0.0"
   }
