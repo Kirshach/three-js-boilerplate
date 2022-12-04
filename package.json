@@ -32,14 +32,14 @@
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-prettier": "4.2.1",
     "prettier": "2.7.1",
-    "typescript": "4.8.4",
+    "typescript": "4.9.3",
     "vite": "3.1.8",
     "vite-plugin-dts": "1.6.6",
     "vite-tsconfig-paths": "3.5.1"
   },
   "peerDependencies": {
-    "cannon-es": "0.20.0",
-    "three": "0.146.0"
+    "cannon-es": "^0.20.0",
+    "three": "^0.146.0"
   },
   "dependencies": {
     "cannon-es-debugger": "^1.0.0",
